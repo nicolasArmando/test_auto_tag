@@ -1,0 +1,48 @@
+name: Auto version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to put in pom'
+        required: false
+
+env:
+  # conditionals envs
+
+  VERSION: ${{ github.event.inputs.version }}
+  ACT_HAS_VERSION: ${{ github.event.inputs.version != '' }}
+
+  # workflow envs
+  APP_NAME: Auto version test
+
+jobs:
+  change_versions:
+    runs-on: [self-hosted, cicd]
+    container:
+      image: maven:3.8.4-eclipse-temurin-17
+    steps:
+      - name: Checkout APP repository
+        uses: actions/checkout@v3
+      - name: Create release branch
+        run: git checkout -b release/${{ env.VERSION }}
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "Auto version"
+          git config user.email customerapp@wefox.com
+      - name: Execute vbum for version ${{env.VERSION}}
+        shell: bash
+        run: |
+          ./vbump.sh ${{env.VERSION}}
+      - name: Commit changelog and manifest files
+        id: make-commit
+        run: |
+          git add -A
+          git commit --message "Auto pom changes for ${{ env.VERSION }}"
+          echo "::set-output name=commit::$(git rev-parse HEAD)"
+      - name: Push new branch
+        run: git push origin release/v${{ github.event.inputs.versionName }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: Auto commit for new version ${{ env.VERSION }}

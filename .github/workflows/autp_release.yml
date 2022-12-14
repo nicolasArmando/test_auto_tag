@@ -47,11 +47,11 @@ jobs:
           git add .
           git commit --message "Auto pom changes for ${{ env.VERSION }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
-      - name: Push new branch
-        run: git push origin release/${{env.VERSION}}
+#      - name: Push new branch
+#        run: git push origin release/${{env.VERSION}}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           title: Auto commit for new version ${{ env.VERSION }}
-          base: main
-          branch: ${{env.NEW_BRANCH}}
+#          base: main
+#          branch: ${{env.NEW_BRANCH}}

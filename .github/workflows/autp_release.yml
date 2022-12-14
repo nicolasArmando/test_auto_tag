@@ -23,10 +23,6 @@ jobs:
       image: maven:3.8.4-eclipse-temurin-17
 
     steps:
-#      - name: Set up JDK 117
-#        uses: actions/setup-java@v2
-#        with:
-#          java-version: '17'
       - name: Checkout APP repository
         uses: actions/checkout@v3
       - name: Create release branch
@@ -40,6 +36,7 @@ jobs:
         run: |
           mvn versions:set -DnewVersion=${{env.VERSION}}
           mvn versions:commit
+          sed -i  -E 's/(image: wefox\/.+:)(.+)/\1$version/g' docker-compose.yml
       - name: Commit changelog and manifest files
         id: make-commit
         run: |
@@ -47,11 +44,6 @@ jobs:
           git add .
           git commit --message "Auto pom changes for ${{ env.VERSION }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
-#      - name: Push new branch
-#        run: git push origin release/${{env.VERSION}}
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
-        with:
-          title: Auto commit for new version ${{ env.VERSION }}
-#          base: main
-#          branch: ${{env.NEW_BRANCH}}
+      - name: Push new branch
+        run: git push origin release/${{env.VERSION}}
+

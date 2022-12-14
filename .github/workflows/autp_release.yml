@@ -40,7 +40,7 @@ jobs:
         run: |
           mvn versions:set -DnewVersion=${{env.VERSION}}
           mvn versions:commit
-          "sed -i -e -E \"s/(image: wefox\/.+:)(.+)/\1$version/g\" docker-compose.yml"
+          "sed -i -e -E 's/(image: wefox\/.+:)(.+)/\1$version/g' docker-compose.yml"
           rm docker-compose.yml-e
       - name: Commit changelog and manifest files
         id: make-commit

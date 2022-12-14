@@ -9,4 +9,4 @@ services:
       - redis-data:/data
 
   redis-commander:
-    image: wefox/nicolas:2.0.0
+    image: wefox/nicolas:5.5.6

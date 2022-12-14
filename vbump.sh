@@ -6,7 +6,7 @@
 # FILES UPDATED
 # - pom.xml files: this script runs the maven commands versions:set -DnewVersion=$newVersion and versions:commit,
 # so all pom.xml files inside the project will be updated
-# - ./docker-compose.yml: it will search for image: wefox/*:{old_version} string and will replace with the new version
+# - ./docker-compose.yml: it will search for image: wefox/*:{old_version} string and will replace with the new version.
 
 if [ -z $1 ]
 then
